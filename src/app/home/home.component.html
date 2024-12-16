@@ -1,7 +1,7 @@
 <nav class="bg-blue-600 text-white shadow-lg">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
       <!-- Logo -->
-      <a routerLink="/" class="text-lg font-bold">MyApp</a>
+      <a routerLink="/" class="text-lg font-bold">BlogApp</a>
   
       <!-- Links -->
       <div class="flex space-x-4">
@@ -22,7 +22,7 @@
         <!-- Links for Authenticated Users -->
         <ng-container *ngIf="chekToken">
           <a
-            routerLink="/dashboard"
+            routerLink="/dashboard/posts"
             class="px-3 py-2 rounded hover:bg-blue-500 transition-colors"
             >Dashboard</a
           >

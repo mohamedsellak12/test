@@ -7,6 +7,12 @@ import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { LoginGardService } from './services/login-gard.service';
 import { AddPostComponent } from './add-post/add-post.component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { AdminGardService } from './services/admin-gard.service';
+import { PostComponent } from './post/post.component';
+import { RequestPasswordResetComponent } from './request-password-reset/request-password-reset.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { UserPostsComponent } from './user-posts/user-posts.component';
 
 
 export const routes: Routes = [
@@ -30,6 +36,26 @@ export const routes: Routes = [
 
   },
   {
+    path:'reset-password/:token',
+    component:ResetPasswordComponent,
+    title: 'Reset Password',
+    canActivate: [LoginGardService]  
+  },
+  {
+    path:'password-forgot',
+    component:RequestPasswordResetComponent,
+    title: 'Password Reset',
+    canActivate: [LoginGardService]  
+  }
+  ,
+  {
+    path:'admindashboard',
+    component:AdminDashboardComponent,
+    title:'Admin Dashboard',
+    canActivate:[AdminGardService]
+  },
+  
+  {
     path: 'dashboard',
     component: DashboardComponent,
     title: 'Dashboard',
@@ -43,6 +69,15 @@ export const routes: Routes = [
         path:'addpost',
         component: AddPostComponent,
         title: 'Post',
+      },{
+        path:'posts',
+        component: PostComponent,
+        title: 'Posts',
+      },
+      {
+        path:'Your-posts',
+        component:UserPostsComponent,
+        title: 'Your Posts',
       }
     ],
   },

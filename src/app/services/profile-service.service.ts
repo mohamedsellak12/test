@@ -24,7 +24,7 @@ export class ProfileServiceService {
    
     return this.http.put(`${this.apiUrl}/updateInfo/${id}`, userData);
   }
-  deleteUser(id:any): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/deleteUser/${id}`);
+  deleteUser(password:any,id:any): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/deleteUser/${id}`,password);
   }
 }

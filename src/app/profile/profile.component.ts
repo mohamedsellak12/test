@@ -13,9 +13,9 @@ export class ProfileComponent implements OnInit {
   user :any;
 
   popup :boolean=false;
+  password='';
   
   User ={
-    
     currentPassword: '',
     newPassword: ''
   }
@@ -73,14 +73,20 @@ export class ProfileComponent implements OnInit {
 )
 }
 
-deleteUserAccount(){
-  this.profileService.deleteUser(this.profile.user.id).subscribe({
+deleteUserAccount(event: Event): void {
+  this.profileService.deleteUser( {
+    body: { password: this.password }
+  } ,this.profile.user.id).subscribe({
+    
     next: (response) => {
       console.log(response);
       alert(response.message);
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+      if(response.message==='User deleted successfully'){
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      }
+      this.password=''
     },
     error: (err) => {
       console.error(err);

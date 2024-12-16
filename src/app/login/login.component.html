@@ -35,7 +35,7 @@
               <input type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
               <span class="ml-2 text-gray-600">Remember me</span>
             </label>
-            <a href="#" class="text-sm text-blue-600 hover:underline">Forgot password?</a>
+            <a href="#" routerLink="/password-forgot" class="text-sm text-blue-600 hover:underline">Forgot password?</a>
           </div>
           
           <!-- Submit Button -->
@@ -51,6 +51,9 @@
         <p class="mt-6 text-center text-sm text-gray-600">
           Don't have an account? 
           <a  routerLink="/register" class="text-blue-600 hover:underline">Sign up</a>
+        </p>
+        <p *ngIf="!isError" class=" mt-6 text-center text-sm text-red-600" >
+          {{ errorMessage }}
         </p>
       </div>
 </div>

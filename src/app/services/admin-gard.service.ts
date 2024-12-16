@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
-import {  ActivatedRouteSnapshot, CanActivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGardService implements CanActivate {
-  
-  constructor(private router:Router ) { }
+export class AdminGardService implements CanActivate {
+
+  constructor(private router:Router) { }
   canActivate(): MaybeAsync<GuardResult> {
     if(typeof window !== 'undefined' && window.localStorage){
-
-    
     const token = localStorage.getItem('token');
     
     if (!token) {
@@ -26,16 +24,16 @@ export class AuthGardService implements CanActivate {
       return false;
     }
 
-    // Check if the user role is allowed (e.g., "user")
-    if (user.role === 'user') {
+    // Check if the user role is allowed (e.g., "admin")
+    if (user.role === 'admin') {
       return true; // Allow access if the role is "user"
     } else {
-      this.router.navigate(['/admindashboard']); // Redirect to login or an access-denied page if the role doesn't match
+      this.router.navigate(['/dashboard']); // Redirect to login or an access-denied page if the role doesn't match
       return false;
     }
+      
   }else{
-     // Redirect to login if localStorage is not available
-    return false;
+    return false; // Return false if window object is undefined or localStorage is not available
   }
-
-}}
+  }
+}

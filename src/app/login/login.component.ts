@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -6,7 +7,7 @@ import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-login',
-  imports: [RouterModule , FormsModule ,HttpClientModule],
+  imports: [RouterModule , FormsModule ,HttpClientModule,CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -17,6 +18,7 @@ export class LoginComponent{
   };
   message: string | null = null;  
   isSubmitting = false;
+  isError: boolean=true
   errorMessage: string | null = null;
 
   private apiUrl = 'http://localhost:3000/user'; // Replace with your backend URL
@@ -37,18 +39,21 @@ export class LoginComponent{
     // Make the POST request to the login endpoint directly in the component
     this.http.post(`${this.apiUrl}/login`, this.credentials).subscribe({
       next: (response: any) => {
-        console.log('Login successful:', response);
+        console.log('Login successful:', response.user.role);
         localStorage.setItem('token', response.token); 
         localStorage.setItem('user', JSON.stringify(response.user));// Store the token in localStorage
-        this.router.navigate(['/dashboard'],{
-          state: { user: response.user }
-        }); // Redirect to the dashboard
+       if(response.user.role=='admin'){
+         this.router.navigate(['/admindashboard']); // Redirect to the admin dashboard
+       }else{
+         this.router.navigate(['/dashboard/posts']); // Redirect to the dashboard
+       }
       },
       error: (error :any) => {
-        console.log('Login error:', error);
+        console.log('Login error:', error.message);
         this.errorMessage =  'Login failed , please try again ';
-        alert(this.errorMessage);
-        this.isSubmitting = false; // Re-enable the button if error occurs
+        // alert(this.errorMessage);
+        this.isSubmitting = false; 
+        this.isError=false// Re-enable the button if error occurs
       },
       complete: () => {
         this.isSubmitting = false; // Re-enable the button after the request is complete

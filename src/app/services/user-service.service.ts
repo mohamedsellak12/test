@@ -22,7 +22,9 @@ export class UserServiceService {
       this.http.post(`${this.urlapi}/logout`, {}, { headers: { Authorization: `Bearer ${token}` } })
         .subscribe({
           next: () => {
-            localStorage.removeItem('token'); // Clear token
+            localStorage.removeItem('token');
+             // Clear token
+             localStorage.removeItem('user')
             this.router.navigate(['/login'],{
               state: { message: 'You have been logged out successfully.' }, 
             }); 
@@ -36,5 +38,10 @@ export class UserServiceService {
       this.router.navigate(['/login']); // Redirect even if no token
     }
   }
+  requestPasswordReset(email:any):Observable<any> {
+    return this.http.post(`${this.urlapi}/request-reset-password`, { email });
   }
-
+  resetPassword(token:any, password:{}): Observable<any> {
+    return this.http.post(`${this.urlapi}/reset-password/${token}`, password );
+  }
+}

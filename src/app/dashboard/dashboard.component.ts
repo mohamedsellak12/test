@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { UserServiceService } from '../services/user-service.service';
 import { CommonModule } from '@angular/common';
+import { PostService } from '../services/post.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,8 +11,11 @@ import { CommonModule } from '@angular/common';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
+  
   user: any;
+
   openLogoutPopup: boolean = false;
+  postService=inject(PostService)
 
   constructor(private userService :UserServiceService,private router: Router) {}
 
@@ -23,6 +27,7 @@ export class DashboardComponent implements OnInit {
       this.user=storedUser?JSON.parse(storedUser) : null;
     } // Retrieve the user data
     console.log('User data:', this.user);
+    
   }
   goToProfile(): void {
     this.router.navigate(['/profile']);

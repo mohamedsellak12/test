@@ -1,0 +1,67 @@
+<div class="flex min-h-screen bg-gray-100">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-blue-600 text-white">
+      <div class="p-4 text-center font-bold text-lg border-b border-blue-500">
+        Dashboard
+      </div>
+      <nav class="mt-4">
+        <ul>
+          <li class="hover:bg-blue-500">
+            <a routerLink="/dashboard" class="block px-4 py-2">Home</a>
+          </li>
+          <li class="hover:bg-blue-500" >
+            <a routerLink="/dashboard/profile"  class="block px-4 py-2">Profile</a>
+          </li>
+          <li class="hover:bg-blue-500">
+            <a href="#" class="block px-4 py-2">Settings</a>
+          </li>
+          <li class="hover:bg-blue-500">
+            <a href="#"  (click)="ShowPopup($event)" class="block px-4 py-2 text-red-400">Logout</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <!-- Header -->
+      <header class="flex items-center justify-between bg-white shadow p-4 rounded-lg">
+        <h1 class="text-2xl font-bold p-3 text-gray-800">Welcome, {{ user.nom || 'User' }} {{ user.prenom }}</h1>
+        <button
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        >
+        <a routerLink="/dashboard/addpost">Add New Post</a>
+          
+        </button>
+      </header>
+      <!-- Logout Confirmation Popup -->
+<div
+*ngIf="openLogoutPopup"
+class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+>
+<div class="bg-white p-6 rounded shadow-lg text-center">
+  <h2 class="text-lg font-bold mb-4">Confirm Logout</h2>
+  <p class="mb-6">Are you sure you want to log out?</p>
+  <button
+    (click)="logout()"
+    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+  >
+    Logout
+  </button>
+  <button
+    (click)="ClosePopup()"
+    class="bg-gray-300 px-4 py-2 rounded ml-2 hover:bg-gray-400"
+  >
+    Cancel
+  </button>
+</div>
+</div>
+
+  
+      <!-- Content Section -->
+      <section class="mt-6">
+        <router-outlet/>
+      </section>
+    </main>
+  </div>
+  

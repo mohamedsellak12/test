@@ -16,7 +16,11 @@
           class="w-12 h-12 rounded-full"
         />
         <div class="ml-4">
-          <p class="text-sm font-semibold text-gray-800">{{ post.userId?._id===user.id ?"You" :post.userId?.nom  || 'Unknown' }} {{ post.userId?._id===user.id ?" " :post.userId?.prenom   }}</p>
+          <p  class="text-2xl font-bold  text-gray-800">
+            <a class=" hover:underline" routerLink="/dashboard/userProfile/{{ post.userId?._id }}">
+              {{ post.userId?._id===user.id ?"You" :post.userId?.nom  || 'Unknown' }} {{ post.userId?._id===user.id ?" " :post.userId?.prenom   }}
+            </a>
+          </p>
           <p class="text-xs text-gray-500">{{ post.createdAt | date: 'medium' }}</p>
         </div>
 
@@ -110,67 +114,89 @@
       <p class="text-gray-700 mb-4">{{ post.content }}</p>
 
       <!-- Comments Area -->
-      <div *ngIf="isCommentAreaOpen(post._id)" class="max-w-xl mx-auto mt-6 bg-white p-4 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold mb-4"> Comments </h2>
-        <div>
-          <div *ngIf="Comment.length==0" class="flex items-start mb-4 space-x-4">
+      <div
+      *ngIf="isCommentAreaOpen(post._id)"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+    >
+      <div class="bg-white max-w-xl w-full p-6 rounded-lg shadow-lg">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-2xl font-bold">Comments ({{ numberOfcomments }})</h2>
+          <button class="hover:text-red-600" (click)="openCommentArea(post._id)">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+    
+        <!-- Zone de commentaires défilables -->
+        <div class="overflow-y-auto max-h-80">
+          <div *ngIf="Comments.length === 0" class="flex items-start mb-4 space-x-4">
             <p class="text-gray-500 text-xs">No comments yet.</p>
           </div>
+    
           <div *ngFor="let comment of Comments" class="flex items-start mb-4 space-x-4">
-           
-          
             <!-- Contenu du commentaire -->
             <div class="flex-1 bg-gray-100 p-3 rounded-lg shadow-sm">
               <!-- Informations de l'utilisateur -->
               <div class="flex items-center justify-between">
                 <h6 class="text-sm font-semibold text-gray-800">
-                  {{ comment.userId?._id===user.id ?"You" :comment.userId?.nom  || 'Unknown' }} {{ comment.userId?._id===user.id ?" " :comment.userId?.prenom   }}
+                  {{ comment.userId?._id === user.id ? "You" : comment.userId?.nom || 'Unknown' }}
+                  {{ comment.userId?._id === user.id ? "" : comment.userId?.prenom }}
                 </h6>
+                <span *ngIf="comment.createdAt!=comment.updatedAt">(edited)</span>
                 <p class="text-xs text-gray-500">{{ comment.createdAt | date: 'short' }}</p>
               </div>
-          
+    
               <!-- Texte du commentaire -->
-              <p class="text-gray-700 mt-2 text-sm">
-                {{ comment.content }}
-              </p>
-          
+              <p class="text-gray-700 mt-2 text-sm">{{ comment.content }} </p>
+    
               <!-- Boutons d'action -->
               <div class="flex space-x-4 text-xs text-gray-500 mt-2">
                 <button class="hover:text-blue-600">
                   <i class="fa fa-thumbs-up"></i> Like
                 </button>
-
                 <button class="hover:text-blue-600">
                   <i class="fa fa-reply"></i> Reply
+                </button>
+                <button class="hover:text-blue-600" 
+                *ngIf="user.id == post.userId._id || user.id == comment.userId._id">
+                  <i class="fa fa-edit"></i> Edit
+                </button>
+                <button
+                  *ngIf="user.id == post.userId._id || user.id == comment.userId._id"
+                  class="hover:text-red-600"
+                  (click)="onDeleteComment(comment._id)"
+                >
+                  <i class="fa fa-trash"></i> Delete
                 </button>
               </div>
             </div>
           </div>
-          
-         
         </div>
-        <form  (submit)="onAddComment(post._id)">
-          <div class="mb-4  ">
+    
+        <!-- Zone d'ajout de commentaire fixe -->
+        <form (submit)="onAddComment(post._id)" class="pt-4 border-t mt-4">
+          <div class="mb-4">
             <textarea
               id="content"
               name="content"
               [(ngModel)]="Comment.content"
               rows="3"
               required
-              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200 resize-none"
               placeholder="Write your comment here..."
             ></textarea>
-           
-            
           </div>
           <button
             type="submit"
-            class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none"
+            class="bg-white-500 text-white px-6 py-2 rounded-lg hover:bg-gray-100 focus:outline-none"
           >
-            Add Comment
+          <img src="send-4008.png" alt="">
+           
           </button>
         </form>
       </div>
+    </div>
+    
+      
   
       <!-- Post Image -->
       <div *ngIf="post.photo && !isCommentAreaOpen(post._id)" class="mb-4">

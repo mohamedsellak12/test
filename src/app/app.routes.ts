@@ -13,6 +13,7 @@ import { PostComponent } from './post/post.component';
 import { RequestPasswordResetComponent } from './request-password-reset/request-password-reset.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { UserPostsComponent } from './user-posts/user-posts.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 
 export const routes: Routes = [
@@ -78,6 +79,11 @@ export const routes: Routes = [
         path:'Your-posts',
         component:UserPostsComponent,
         title: 'Your Posts',
+      },
+      {
+        path:'userProfile/:id',
+        component:UserProfileComponent,
+        title: 'User Profile',
       }
     ],
   },

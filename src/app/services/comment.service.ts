@@ -18,6 +18,12 @@ export class CommentService {
   getCommentsOfPost(id:any):Observable<any>{
     return this.http.get(`${this.url}/getCommentsOfPost/${id}`)
   }
+  deleteComment(commentId:any):Observable<any>{
+    return this.http.delete(`${this.url}/deleteComment/${commentId}`)
+  }
+  getNumberOfComments(postId:any):Observable<any>{
+    return this.http.get(`${this.url}/numberOfComments/${postId}`)
+  }
 
 
 

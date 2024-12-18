@@ -3,10 +3,11 @@ import { PostService } from '../services/post.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommentService } from '../services/comment.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-post',
-  imports: [CommonModule ,FormsModule , ],
+  imports: [CommonModule ,FormsModule , RouterModule],
   templateUrl: './post.component.html',
   styleUrl: './post.component.css'
 })
@@ -17,9 +18,10 @@ export class PostComponent implements OnInit {
   Comment: any={
     content: '',
     postId: '',
-    userId: '',
+    userId: ''
   };
-  openMenuPostById:string|null=null ;
+  numberOfcomments:any;
+  openMenuPostById:string|null=null 
   openCommentPostById:string|null=null ;
   updateOpenId:string|null=null ;
   updatedTitle:string=''
@@ -36,9 +38,10 @@ export class PostComponent implements OnInit {
   openCommentArea(postId:any){
     this.openCommentPostById=this.openCommentPostById===postId?null:postId;
     this.commentService.getCommentsOfPost(postId).subscribe({
-      next: (comments) => {
-        console.log('Comments of post:', comments);
-        this.Comments=comments;
+      next: (response) => {
+        console.log('Comments of post:', response);
+        this.Comments=response.comments;
+        this.numberOfcomments=this.Comments.length; // Update the number of comments for the post
       },
       error: (error) => {
         console.error('Error fetching comments of post:', error);
@@ -77,12 +80,14 @@ export class PostComponent implements OnInit {
     this.postService.getAllPosts().subscribe({
       next: (response) => {
         console.log('All posts:', response);
-        this.Posts=response; // Assign the posts to the component's posts array
+        this.Posts=response;
+         // Assign the posts to the component's posts array
       },
       error: (error) => {
         console.error('Error fetching posts:', error);
       }
     })
+   
   }
   //adding comment
   onAddComment(idPost:any){
@@ -118,6 +123,22 @@ export class PostComponent implements OnInit {
       }
 
     })
+  }
+  onDeleteComment(id:any){
+    if(confirm('Are you sure you want to delete this comment')){
+      this.commentService.deleteComment(id).subscribe({
+        next: (response) => {
+          console.log('Comment deleted successfully');
+          this.Comments=this.Comments.filter((comment :any)=>comment._id!==id); // Remove the deleted comment from the comments array
+        },
+        error: (error) => {
+          console.error('Error deleting comment:', error);
+        }
+      })
+
+    }
+
+
   }
   Ondelete(id:string){
     if(confirm('Are you sure you want to delete this post?')){

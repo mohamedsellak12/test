@@ -44,4 +44,7 @@ export class UserServiceService {
   resetPassword(token:any, password:{}): Observable<any> {
     return this.http.post(`${this.urlapi}/reset-password/${token}`, password );
   }
+  getUserById(id:string): Observable<any> {
+    return this.http.get(`${this.urlapi}/getUser/${id}`);
+  }
 }

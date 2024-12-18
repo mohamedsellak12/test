@@ -43,4 +43,7 @@
   .comment-actions button:hover {
     color: #2563eb;
   }
+  textarea {
+    resize: none;
+  }
   

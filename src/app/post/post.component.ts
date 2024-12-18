@@ -20,6 +20,8 @@ export class PostComponent implements OnInit {
     postId: '',
     userId: ''
   };
+  isEditCommentPopupOpen = false;
+  selectedComment: any = {};
   numberOfcomments:any;
   openMenuPostById:string|null=null 
   openCommentPostById:string|null=null ;
@@ -48,6 +50,35 @@ export class PostComponent implements OnInit {
       }
     })
 
+  }
+  openEditPopup(comment:any){
+    this.isEditCommentPopupOpen=true;
+    this.selectedComment={...comment};
+  }
+  closeEditPopup(){
+    this.isEditCommentPopupOpen=false;
+    this.selectedComment={};
+  }
+  onUpdateComment(){
+    this.commentService.updateComment(this.selectedComment._id ,this.selectedComment.content)
+    .subscribe({
+      next: (response) => {
+        const commentIndex = this.Comments.findIndex((c:any) => c._id === this.selectedComment._id);
+        if (commentIndex > -1) {
+          this.Comments[commentIndex] = { ...this.Comments[commentIndex], ...response.comment };
+        }
+
+        // Fermer le popup
+        this.isEditCommentPopupOpen = false;
+        this.selectedComment = {};
+        console.log('Comment updated successfully:', response.message);
+        
+      },
+      error: (error) => {
+        console.error('Error updating comment:', error);
+      }
+
+    })
   }
   isCommentAreaOpen(postId:any){
      return this.openCommentPostById===postId ;
@@ -140,6 +171,7 @@ export class PostComponent implements OnInit {
 
 
   }
+  
   Ondelete(id:string){
     if(confirm('Are you sure you want to delete this post?')){
       this.postService.deletePost(id).subscribe({

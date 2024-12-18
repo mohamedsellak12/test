@@ -24,6 +24,10 @@ export class CommentService {
   getNumberOfComments(postId:any):Observable<any>{
     return this.http.get(`${this.url}/numberOfComments/${postId}`)
   }
+  updateComment(id:any,comment:any):Observable<any>{
+    const body={content:comment}
+    return this.http.put(`${this.url}/updateComment/${id}`, body)
+  }
 
 
 

@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { PostService } from '../services/post.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CommentService } from '../services/comment.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -16,9 +17,20 @@ export class UserProfileComponent implements OnInit {
   User:any;
   user:any;
   userService=inject(UserServiceService)
+  numberOfcomments: any;
   
   constructor( private route:ActivatedRoute) { }
   posts:any=[];
+  Comments: any=[];
+  Comment: any={
+    content: '',
+    postId: '',
+    userId: ''
+  };
+  isEditCommentPopupOpen = false;
+  selectedComment: any = {};
+  openCommentPostById:string|null=null ;
+
   openMenuPostById:string|null=null ;
   updateOpenId:string|null=null ;
   updatedTitle:string=''
@@ -26,6 +38,8 @@ export class UserProfileComponent implements OnInit {
   selectedPhoto: File | null = null;
   emptyMessage:string|null=null;
   postService=inject(PostService)
+  commentService=inject(CommentService)
+
 
 
   onSelectPhoto(event:any):void{
@@ -47,6 +61,103 @@ export class UserProfileComponent implements OnInit {
   }
   isMenuOpen(postId:string):boolean{
     return this.openMenuPostById===postId ;
+  }
+  openCommentArea(postId:any){
+    this.openCommentPostById=this.openCommentPostById===postId?null:postId;
+    this.commentService.getCommentsOfPost(postId).subscribe({
+      next: (response) => {
+        console.log('Comments of post:', response);
+        this.Comments=response.comments;
+        this.numberOfcomments=this.Comments.length; // Update the number of comments for the post
+      },
+      error: (error) => {
+        console.error('Error fetching comments of post:', error);
+      }
+    })
+
+  }
+  isCommentAreaOpen(postId:any){
+    return this.openCommentPostById===postId ;
+ }
+ closeEditPopup(){
+  this.isEditCommentPopupOpen=false;
+  this.selectedComment={};
+}
+openEditCommentPopup(comment:any){
+  this.isEditCommentPopupOpen=true;
+  this.selectedComment=comment;
+}
+ onUpdateComment(){
+  this.commentService.updateComment(this.selectedComment._id ,this.selectedComment.content)
+  .subscribe({
+    next: (response) => {
+      const commentIndex = this.Comments.findIndex((c:any) => c._id === this.selectedComment._id);
+      if (commentIndex > -1) {
+        this.Comments[commentIndex] = { ...this.Comments[commentIndex], ...response.comment };
+      }
+
+      // Fermer le popup
+      this.isEditCommentPopupOpen = false;
+      this.selectedComment = {};
+      console.log('Comment updated successfully:', response.message);
+      
+    },
+    error: (error) => {
+      console.error('Error updating comment:', error);
+    }
+
+  })
+}
+  
+  onAddComment(idPost:any){
+    // console.log(this.Comment)
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      if (user && user.id) {
+        this.Comment.userId = user.id;
+      } else {
+        console.error('User ID is missing in localStorage.');
+        return; // Prevent the post from being submitted without an author.
+      }
+    } else {
+      console.error('LocalStorage is not available.');
+      return;
+    }
+    this.Comment.postId=idPost;
+   
+
+    this.commentService.addComment(this.Comment).subscribe({
+      next: (response) => {
+        this.Comments.push(response.comment)
+        this.Comment={
+          content: '',
+          postId: '',
+          userId: '',
+        }
+        // Add the new comment to the corresponding post
+        alert(response.message)
+      },
+      error: (error) => {
+        console.error('Error adding comment:', error);
+      }
+
+    })
+  }
+  onDeleteComment(id:any){
+    if(confirm('Are you sure you want to delete this comment')){
+      this.commentService.deleteComment(id).subscribe({
+        next: (response) => {
+          console.log('Comment deleted successfully');
+          this.Comments=this.Comments.filter((comment :any)=>comment._id!==id); // Remove the deleted comment from the comments array
+        },
+        error: (error) => {
+          console.error('Error deleting comment:', error);
+        }
+      })
+
+    }
+
+
   }
   ngOnInit(): void {
     this.id=this.route.snapshot.paramMap.get('id');

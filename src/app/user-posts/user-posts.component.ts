@@ -20,6 +20,8 @@ export class UserPostsComponent implements OnInit{
     postId: '',
     userId: ''
   };
+  isEditCommentPopupOpen = false;
+  selectedComment: any = {};
   openCommentPostById:string|null=null ;
   numberOfcomments:any;
   openMenuPostById:string|null=null ;
@@ -31,7 +33,14 @@ export class UserPostsComponent implements OnInit{
   postService=inject(PostService)
   commentService=inject(CommentService)
 
-
+  closeEditPopup(){
+    this.isEditCommentPopupOpen=false;
+    this.selectedComment={};
+  }
+  openEditCommentPopup(comment:any){
+    this.isEditCommentPopupOpen=true;
+    this.selectedComment=comment;
+  }
   onSelectPhoto(event:any):void{
     this.selectedPhoto=event.target.files[0];
     console.log(this.selectedPhoto)
@@ -105,6 +114,27 @@ export class UserPostsComponent implements OnInit{
     }
 
 
+  }
+  onUpdateComment(){
+    this.commentService.updateComment(this.selectedComment._id ,this.selectedComment.content)
+    .subscribe({
+      next: (response) => {
+        const commentIndex = this.Comments.findIndex((c:any) => c._id === this.selectedComment._id);
+        if (commentIndex > -1) {
+          this.Comments[commentIndex] = { ...this.Comments[commentIndex], ...response.comment };
+        }
+
+        // Fermer le popup
+        this.isEditCommentPopupOpen = false;
+        this.selectedComment = {};
+        console.log('Comment updated successfully:', response.message);
+        
+      },
+      error: (error) => {
+        console.error('Error updating comment:', error);
+      }
+
+    })
   }
 
   toggleMenu(postId:any){

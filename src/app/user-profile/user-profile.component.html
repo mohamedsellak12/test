@@ -112,17 +112,18 @@
           class="absolute right-0 bg-white border rounded shadow-md w-40 mt-2 z-10"
         >
           <button
-            class="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-gray-700"
+            class="w-full text-left px-4 py-2 hover:text-blue-600 text-sm text-gray-700"
            (click)="openUpdateForm(post)"
            (click)="toggleMenu(post._id)"
+           
           >
-            Edit
+          <i class="fa fa-edit"></i> Edit
           </button>
           <button
-            class="w-full text-left px-4 py-2 hover:bg-red-100 text-sm text-gray-700"
+            class="w-full text-left px-4 py-2 hover:text-red-600 text-sm text-gray-700"
            (click)="Ondelete(post._id)"
           >
-            Delete
+          <i class="fa fa-trash"></i> Delete
           </button>
         </div>
         </div>
@@ -211,8 +212,8 @@
                 <h6 class="text-sm font-semibold text-gray-800">
                   {{ comment.userId?._id === user.id ? "You" : comment.userId?.nom || 'Unknown' }}
                   {{ comment.userId?._id === user.id ? "" : comment.userId?.prenom }}
-                  <span *ngIf="comment.createdAt!=comment.updatedAt">(edited at {{ comment.updatedAt | date:'short' }})</span>
                 </h6>
+                <span *ngIf="comment.createdAt!=comment.updatedAt">(edited)</span>
                 <p class="text-xs text-gray-500">{{ comment.createdAt | date: 'short' }}</p>
               </div>
     

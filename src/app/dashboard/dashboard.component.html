@@ -34,12 +34,24 @@
     <header class="  flex items-center justify-between bg-white shadow p-4 rounded-lg">
       <h1 class="text-2xl font-bold p-3 text-gray-800">
         Welcome, {{ user.nom || 'User' }} {{ user.prenom }}
+        
       </h1>
+      
+      <div class=" flex items-center justify-between ">
+        <button
+        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+      >
+        <a routerLink="/dashboard/addpost"> <i class="fa-solid fa-plus"></i> Post</a>
+      </button>
       <button
         class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
       >
-        <a routerLink="/dashboard/addpost">Add New Post</a>
+        <a routerLink="/dashboard/chats">
+          <i class="fa-brands fa-rocketchat"></i>
+          Messaging
+        </a>
       </button>
+      </div>
     </header>
 
     <!-- Logout Confirmation Popup -->

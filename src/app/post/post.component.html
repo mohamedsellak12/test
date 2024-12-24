@@ -160,7 +160,7 @@
                 </button>
                 <button class="hover:text-blue-600" 
                 (click)="openEditPopup(comment)"
-                *ngIf="user.id == post.userId._id || user.id == comment.userId._id">
+                *ngIf=" user.id == comment.userId._id">
                   <i class="fa fa-edit"></i> Edit 
                 </button>
                 

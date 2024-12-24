@@ -197,7 +197,7 @@ export class UserPostsComponent implements OnInit{
           // Find and update the post in the posts array
           const index = this.posts.findIndex((post :any) => post._id === id);
           if (index !== -1) {
-            this.posts[index] = { ...this.posts[index], ...formData };
+            this.posts[index] = { ...this.posts[index], ...updatedPost.post };
           } // Replace the old post with the updated one in the posts array
           this.closeUpdateForm();
           alert(response.message)

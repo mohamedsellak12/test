@@ -64,7 +64,7 @@ export class PostComponent implements OnInit {
     .subscribe({
       next: (response) => {
         const commentIndex = this.Comments.findIndex((c:any) => c._id === this.selectedComment._id);
-        if (commentIndex > -1) {
+        if (commentIndex !== -1) {
           this.Comments[commentIndex] = { ...this.Comments[commentIndex], ...response.comment };
         }
 
@@ -202,7 +202,7 @@ export class PostComponent implements OnInit {
           // Find and update the post in the posts array
           const index = this.Posts.findIndex((post :any) => post._id === id);
           if (index !== -1) {
-            this.Posts[index] = { ...this.Posts[index], ...formData };
+            this.Posts[index] = { ...this.Posts[index], ...updatedPost.post };
           } // Replace the old post with the updated one in the posts array
           this.closeUpdateForm();
           alert(response.message)

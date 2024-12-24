@@ -15,6 +15,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { UserPostsComponent } from './user-posts/user-posts.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ChatsComponent } from './chats/chats.component';
+import { ConversationComponent } from './conversation/conversation.component';
 
 
 export const routes: Routes = [
@@ -91,6 +92,11 @@ export const routes: Routes = [
         path:'chats',
         component:ChatsComponent,
         title: 'Chats',
+      },
+      {
+        path:'conversation/:id',
+        component:ConversationComponent,
+        title: 'Conversation',
       }
     ],
   },

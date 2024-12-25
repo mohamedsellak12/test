@@ -139,8 +139,11 @@
               <!-- Informations de l'utilisateur -->
               <div class="flex items-center justify-between">
                 <h6 class="text-sm font-semibold text-gray-800">
-                  {{ comment.userId?._id === user.id ? "You" : comment.userId?.nom || 'Unknown' }}
-                  {{ comment.userId?._id === user.id ? "" : comment.userId?.prenom }}
+                  <a class=" hover:underline" routerLink="/dashboard/userProfile/{{ comment.userId?._id}}">
+
+                    {{ comment.userId?._id === user.id ? "You" : comment.userId?.nom || 'Unknown' }}
+                    {{ comment.userId?._id === user.id ? "" : comment.userId?.prenom }}
+                  </a>
                   <span *ngIf="comment.createdAt!=comment.updatedAt">(edited at {{ comment.updatedAt | date:'short' }})</span>
                 </h6>
                 

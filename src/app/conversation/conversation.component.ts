@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ConversationService } from '../services/conversation.service';
 import { MessageService } from '../services/message.service';
@@ -19,11 +19,25 @@ export class ConversationComponent implements OnInit {
   conversationId:any;
   messageSent:string='';
   messages:any=[];
+  @ViewChild('chatContainer') private chatContainer!: ElementRef;
   constructor(private route:ActivatedRoute 
     ,private conversationService:ConversationService
     , private messageService:MessageService ,
     private userService:UserServiceService
   ){
+  }
+
+
+  scrollToBottom(): void {
+    setTimeout(() => {
+      try {
+        if (this.chatContainer) {
+          this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+        }
+      } catch (err) {
+        console.error('Error during scroll:', err);
+      }
+    });
   }
   ngOnInit(): void {
     this.recipientId=this.route.snapshot.paramMap.get('id');
@@ -39,7 +53,7 @@ export class ConversationComponent implements OnInit {
         console.error(error);
       }
     })
-    this.conversationService.createConversation(this.user.id,this.recipientId).subscribe({
+    this.conversationService.createConversation(this.user.id,this.recipientId ,this.user.id).subscribe({
       next: (response) => {
         // console.log(response._id);
         this.conversationId=response._id;
@@ -47,11 +61,13 @@ export class ConversationComponent implements OnInit {
           next: (response) => {
             
             this.messages = response;
+
           },
           error: (error) => {
             console.error(error);
           }
         })
+       
     
 
       },
@@ -60,9 +76,7 @@ export class ConversationComponent implements OnInit {
       }
 
     })
-
-
-
+    this.scrollToBottom()
     
   }
 
@@ -70,12 +84,18 @@ export class ConversationComponent implements OnInit {
     this.messageService.sendMessage(this.conversationId,this.user.id,this.messageSent).subscribe({
       next: (response) => {
         this.messageSent='';
+        if(response==""){
+          console.error("Failed to send message")
+          return;
+        }
         this.messages.push(response);
       },
       error: (error) => {
         console.error(error);
       }
     })
+    this.scrollToBottom();
+
 
   }
 

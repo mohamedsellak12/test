@@ -26,7 +26,22 @@ export class ChatsComponent implements OnInit {
       next: (response) => this.conversations=response.filter((c:any) =>!!c.lastMessage),
       error: (error) => console.log(error)
     })
+  }
 
+  deleteConversation(convId:string){
+   if(confirm("Are you sure you want to delete this conversation")){
+     this.conversationService.softdeleteConversations(convId,this.user.id).subscribe({
+       next: (response) => {
+         console.log(response)
+         this.ngOnInit()
+         this.conversationService.deletetheconversation(convId).subscribe({
+           next: (response) => this.ngOnInit(),
+           error: (error) => console.log(error)
+         })
+       },
+       error: (error) => console.log(error)
+     })
+   }
   }
 
 }
